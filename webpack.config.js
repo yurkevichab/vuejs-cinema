@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+require("babel-polyfill");
 const path = require('path');
 const webpack = require('webpack');
 
@@ -20,7 +20,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             "presets": [ [ "env" ] ],
-            "plugins": [ "transform-es2015-destructuring", "transform-object-rest-spread", "transform-runtime" ]
+            "plugins": ["transform-es2015-destructuring", "transform-object-rest-spread", "transform-runtime" ]
           }
         }],
         exclude: /node_modules/,
