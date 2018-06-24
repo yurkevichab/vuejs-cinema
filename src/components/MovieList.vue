@@ -1,10 +1,15 @@
 <template>
     <div id="movie-list">
         <div v-if="filteredMovies.length">
-             <movie-item v-for="movie in filteredMovies" :movie="movie.movie" v-bind:key='movie.Id'></movie-item>
+             <movie-item v-for="movie in filteredMovies" 
+             :movie="movie.movie" 
+             :sessions="movie.sessions" 
+             :day="day"
+               :time="time"
+             :key='movie.Id'></movie-item>
         </div> 
         <div v-else-if="movies.length" class="no-results">
-            No results
+            {{noResults}}
         </div>
             <div v-else class="no-results">
             Loading....
@@ -13,11 +18,12 @@
 </template>
 <script>
 import genres from '../util/genres';
+import times from '../util/times';
 import MovieItem from './MovieItem.vue'
 
 export default {
             props:[
-                'genre', 'time', 'movies'
+                'genre', 'time', 'movies','day'
             ],
             data(){
                 return {
@@ -37,11 +43,28 @@ export default {
                          }
                      })
                     return matched;
+                },
+                    sessionPassesTimeFilter(session){
+                        if(!this.day.isSame(this.$moment(session.time),'day')){
+                            return false;
+                        }else if(this.time.length==0 || this.time.length==2){
+                            true;
+                        }else if(this.time[0] ==times.AFTER_6PM){
+                            return this.$moment(session.time).hour()>=18; 
+                        }
+                    return this.$moment(session.time).hour()<18;  
                 }
             },
             computed:{
                 filteredMovies(){
-                    return this.movies.filter(this.moviePassesGenreFilter)
+                    return this.movies
+                        .filter(this.moviePassesGenreFilter)
+                        .filter(movie=>movie.sessions.find(this.sessionPassesTimeFilter))
+                },
+                noResults(){
+                    let times = this.time.join(', ')
+                    let genres = this.genre.join(', ')
+                    return `No results for ${times}${times.length && genres.length? ', ':''} ${genres}`;
                 }
             },
             components:{

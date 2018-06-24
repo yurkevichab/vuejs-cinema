@@ -15,12 +15,12 @@ export default {
                     methods:{
                         checkFilter(){
                             this.checked=!this.checked
-                            this.$emit('check-filter', 'genre', this.title, this.checked);
+                            this.$bus.$emit('check-filter', this.category, this.title, this.checked);
                         }
 
                     },
                     props:[
-                        'title'
+                        'title','category'
                     ],
                 }
 </script>
