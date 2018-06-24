@@ -1,15 +1,19 @@
 import Vue from 'vue';
 import './style.scss';
 import {checkFilter} from './util/bus';
-import movieList from './components/movieList.vue';
-import movieFilter from './components/movieFilter.vue';
+import routes from './util/routes';
 import moment from 'moment-timezone';
 moment.tz.setDefault("UTC");
 Object.defineProperty(Vue.prototype, '$moment', {get() { return this.$root.moment}});
 
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', {get() { return this.$root.bus}});
+import VueRouter from 'vue-router';
+Vue.use(VueRouter)
 
+const router = new VueRouter({
+    routes
+})
 new Vue({
     el:'#app',
     data:{
@@ -21,8 +25,7 @@ new Vue({
         bus
     },
     components:{
-        movieList,
-        movieFilter
+        Overview
     },
     created(){
         fetch('/api',{method:'get'})
@@ -34,5 +37,6 @@ new Vue({
         })
         .catch( alert );
         this.$bus.$on('check-filter', checkFilter.bind(this));
-    }
+    },
+    router
 })

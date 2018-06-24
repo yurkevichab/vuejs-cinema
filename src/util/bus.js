@@ -1,4 +1,4 @@
-export const checkFilter=(category, title, checked)=>{
+function checkFilter(category, title, checked){
     if(checked){
         this[category].push(title);
     }else{
@@ -8,3 +8,4 @@ export const checkFilter=(category, title, checked)=>{
         }
     }
 }
+export {checkFilter}
