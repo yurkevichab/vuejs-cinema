@@ -24,9 +24,6 @@ new Vue({
         day: moment(),
         bus
     },
-    components:{
-        Overview
-    },
     created(){
         fetch('/api',{method:'get'})
         .then(res=>{
@@ -37,6 +34,9 @@ new Vue({
         })
         .catch( alert );
         this.$bus.$on('check-filter', checkFilter.bind(this));
+        this.$bus.$on('set-day', (day)=>{
+            this.day=day;
+        });
     },
     router
 })
